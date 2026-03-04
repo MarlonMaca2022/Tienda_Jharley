@@ -45,13 +45,18 @@ let sendData = async  (data)=>{
         },
         body : JSON.stringify(data)
         });
-        let userLogin = respuesta.json();
-        console.log("El usuario es: "+userLogin);
-    
+        if (respuesta.status===401){
+            alert("El usuario y la contraseña es incorrecto")
+        }else{
+            let userLogin = await respuesta.json();
+            alert(`Bienvenido: ${userLogin.usuario}`);
+            //Guardar datos en LocalStorage
+            localStorage.setItem("userLogin", JSON.stringify(userLogin));
+            location.href = "index.html";
+        }
+
+        
     } catch (error) {
         console.log(error);
     }
-
-   
-
 };
