@@ -30,6 +30,9 @@ async function getProducts(){
         } else{
             let data = await respuesta.json();
             console.log(data);
+
+            localStorage.setItem("datosTabla", JSON.stringify(data));
+
             data.forEach((producto, index) => {
                 let row = tablepro.insertRow();
                 row.insertCell(0).textContent = index + 1;
@@ -38,8 +41,8 @@ async function getProducts(){
                 row.insertCell(3).textContent = producto.precio;
                 row.insertCell(4).textContent = producto.stock;
                 row.insertCell(5).innerHTML = `<img src="${producto.imagen}" alt="Imagen del producto" width="80">`;
-                row.insertCell(6).innerHTML = `<button class="btn btn-primary btn-sm">✍</button>
-                                              <button class="btn btn-danger btn-sm">💀</button>`;
+                row.insertCell(6).innerHTML = `<button id="btn-edit" onclick="editDataTable(${index})" type="button" class="btn btn-primary btn-sm">✍</button>
+                                              <button id="btn-delete" onclick="deleteDataTable(${index})" type="button" class="btn btn-danger btn-sm">💀</button>`;
             });
         }  
 
@@ -47,4 +50,22 @@ async function getProducts(){
         console.log(error);
 
     }
+}
+
+
+window.editDataTable = (pos)=>{
+    let products = []
+    let productsSave = JSON.parse(localStorage.getItem("datosTabla"));
+
+    if (productsSave != null) {
+        products = productsSave;
+    }
+    let singleProduct = products[pos];
+    localStorage.setItem("productoEdit", JSON.stringify(singleProduct));
+    localStorage.removeItem("datosTabla");
+    location.href = "../crear-pro.html";
+}
+
+window.deleteDataTable = (pos)=>{
+    console.log("Eliminando producto en posición: ", pos);
 }
